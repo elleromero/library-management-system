@@ -9,7 +9,7 @@ namespace LibraryManagementSystem.models
     internal class Member
     {
         // TODO: Only generate and retrieve keys from the query. Remove primary and foreign keys later
-        public Member(int id, string name, string address, string phone, string email = "")
+        public Member(string id, string name, string address, string phone, string email = "")
         {
             Id = id;
             Name = name;
@@ -18,7 +18,7 @@ namespace LibraryManagementSystem.models
             Email = email;
         }
 
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
         public string Address { get; set; }
         public string Phone { get; set; }
