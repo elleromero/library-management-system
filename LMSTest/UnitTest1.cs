@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+using LibraryManagementSystem.models;
 
 namespace LMSTest
 {
@@ -9,7 +8,6 @@ namespace LMSTest
         [TestMethod]
         public void TestMethod1()
         {
-            Console.WriteLine("THIS IS FROM TEST");
         }
     }
 }
