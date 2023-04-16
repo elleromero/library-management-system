@@ -1,0 +1,69 @@
+CREATE TABLE members (
+	member_id UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
+	first_name VARCHAR(30) NOT NULL,
+	last_name VARCHAR(30) NOT NULL,
+	address VARCHAR(200) NOT NULL,
+	phone VARCHAR(13) NOT NULL,
+	email VARCHAR(100) NULL
+)
+
+CREATE TABLE roles (
+	role_id UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
+	name VARCHAR(20) NOT NULL,
+	has_access BIT NOT NULL
+)
+
+CREATE TABLE users (
+	user_id UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
+	role_id UNIQUEIDENTIFIER,
+	member_id UNIQUEIDENTIFIER,
+	username VARCHAR(20) NOT NULL,
+    password_hash VARBINARY(60) NOT NULL,
+    password_salt VARBINARY(16) NOT NULL
+	FOREIGN KEY (role_id) REFERENCES roles(role_id),
+	FOREIGN KEY (member_id) REFERENCES members(member_id)
+)
+
+CREATE TABLE statuses (
+	status_id UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
+	name VARCHAR(20) NOT NULL,
+	description VARCHAR(200) NOT NULL,
+	is_available BIT NOT NULL
+)
+
+CREATE TABLE categories (
+	category_id UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
+	name VARCHAR(50) NOT NULL,
+	description VARCHAR(200) NOT NULL
+)
+
+CREATE TABLE books (
+	book_id UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
+	category_id UNIQUEIDENTIFIER,
+	title VARCHAR(100) NOT NULL,
+	sypnosis VARCHAR(500) NOT NULL,
+	author VARCHAR(40) NOT NULL,
+	cover VARCHAR(200) NOT NULL,
+	publisher VARCHAR(40) NOT NULL,
+	publication_date DATETIME2 NOT NULL,
+	isbn VARCHAR(100) NOT NULL,
+	FOREIGN KEY (category_id) REFERENCES categories(category_id),
+)
+
+CREATE TABLE copies (
+	copy_id UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
+	book_id UNIQUEIDENTIFIER,
+	status_id UNIQUEIDENTIFIER,
+	FOREIGN KEY (book_id) REFERENCES books(book_id),
+	FOREIGN KEY (status_id) REFERENCES statuses(status_id)
+)
+
+CREATE TABLE loans (
+	loan_id UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
+	member_id UNIQUEIDENTIFIER,
+	copy_id UNIQUEIDENTIFIER,
+	date_borrowed DATETIME2 NOT NULL,
+	due_date DATETIME2 NOT NULL,
+	FOREIGN KEY (member_id) REFERENCES members(member_id),
+	FOREIGN KEY (copy_id) REFERENCES copies(copy_id),
+)
