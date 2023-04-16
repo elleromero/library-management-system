@@ -8,8 +8,19 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="models\" />
+    <None Remove="resources\queries\setupSQL.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="views\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="resources\queries\setupSQL.sql" />
   </ItemGroup>
 
 </Project>
