@@ -18,8 +18,8 @@ CREATE TABLE users (
 	role_id UNIQUEIDENTIFIER,
 	member_id UNIQUEIDENTIFIER,
 	username VARCHAR(20) NOT NULL,
-    password_hash VARBINARY(60) NOT NULL,
-    password_salt VARBINARY(16) NOT NULL
+    	password_hash VARBINARY(60) NOT NULL,
+    	password_salt VARBINARY(16) NOT NULL
 	FOREIGN KEY (role_id) REFERENCES roles(role_id),
 	FOREIGN KEY (member_id) REFERENCES members(member_id)
 )
