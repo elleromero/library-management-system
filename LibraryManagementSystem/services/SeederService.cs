@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,10 +12,34 @@ namespace LibraryManagementSystem.services
     internal class SeederService : EnvService
     {
         // This class inserts and creates initial data to the database
-        public static void CreateInitialTable()
+        public static bool CreateInitialTables()
         {
+            bool areTablesCreated = false;
+
             // check if the the database exists and has no tables
-            SqlCommand sqlCommand = new SqlCommand();
+            if (IsDatabaseExist(GetDBName()))
+            {
+                if (!AreTablesExist(GetDBName()))
+                {
+                    SqlClient.Execute((error, conn) =>
+                    {
+                        if (error == null)
+                        {
+                            try
+                            {
+                                string script = File.ReadAllText("../../../resources/queries/setupSQL.sql");
+                                SqlCommand command = new SqlCommand(script, conn);
+
+                                command.ExecuteScalar();
+                                areTablesCreated = true;
+                            } catch { areTablesCreated = false; }
+                        }
+                        else areTablesCreated = false;
+                    });
+                }
+            }
+
+            return areTablesCreated;
         }
 
         public static bool CreateDatabase() {
@@ -25,20 +50,22 @@ namespace LibraryManagementSystem.services
             {
                 string query = $"CREATE DATABASE {GetDBName()};";
 
-                SqlClient.Execute((isError, conn) =>
+                SqlClient.Execute((error, conn) =>
                 {
                     SqlCommand command = new SqlCommand(query, conn);
 
-                    try
+                    if (error == null)
                     {
-                        command.ExecuteScalar();
+                        try
+                        {
+                            command.ExecuteScalar();
+                            isDBCreated = true;
+                        }
+                        catch { isDBCreated = false; }
                     }
-                    catch { isDBCreated = false; }
+                    else isDBCreated = false;
                 }, true);
-
-                isDBCreated = true;
             }
-
             return isDBCreated;
         }
 
