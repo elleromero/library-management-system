@@ -12,20 +12,13 @@ namespace LibraryManagementSystem.services
         // NOTE: This class will initialize the database when the program first loads
         public static bool Ready()
         {
-            EnvService env = new EnvService();
-            using (SqlConnection conn = new SqlConnection(env.GetConnBase()))
+            try
             {
-                try
-                {
-                    conn.Open();
-                }
-                catch
-                {
-                    return false;
-                }
-            }
+                SeederService.CreateDatabase();
+                SeederService.CreateInitialTables();
 
-            return true;
+                return true;
+            } catch { return false; }
         }
     }
 }
