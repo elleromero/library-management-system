@@ -15,17 +15,17 @@ namespace LibraryManagementSystem.services
             CONN_BASE = "Data Source = DESKTOP-PDLDGGJ\\SQLEXPRESS;Integrated Security=true;",
             CONN_STR = $"{CONN_BASE}Initial Catalog={DB_NAME}";
                            
-        public string GetDBName()
+        public static string GetDBName()
         {
             return DB_NAME;
         }
 
-        public string GetConnBase()
+        public static string GetConnBase()
         {
             return CONN_BASE;
         }
 
-        public string GetConnStr()
+        public static string GetConnStr()
         {
             return CONN_STR;
         }
