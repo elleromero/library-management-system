@@ -12,7 +12,7 @@ namespace LMSTest.servicesTest
     public class SetupServiceTest
     {
         [TestMethod]
-        public void Should_DB_Connect()
+        public void Should_Setup()
         {
             Assert.IsTrue(SetupService.Ready());
         }

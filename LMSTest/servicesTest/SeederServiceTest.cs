@@ -16,5 +16,9 @@ namespace LMSTest.servicesTest
         {
            Assert.IsTrue(SeederService.CreateDatabase());
         }
+        public void Should_Create_Tables()
+        {
+            Assert.IsTrue(SeederService.CreateInitialTables());
+        }
     }
 }
