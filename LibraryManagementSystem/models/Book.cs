@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LibraryManagementSystem.interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,12 +7,13 @@ using System.Threading.Tasks;
 
 namespace LibraryManagementSystem.models
 {
-    internal class Book
+    internal class Book : IModel
     {
         // TODO: Only generate and retrieve keys from the query. Remove primary and foreign keys later
         // TODO: Add sypnosis field to the erd
         public Book(string id, string categoryID, string title, string sypnosis, string author, string cover, string publisher, DateTime publicationDate, string isbn)
         {
+            tableName = "books";
             ID = id;
             CategoryID = categoryID;
             Title = title;
@@ -32,5 +34,6 @@ namespace LibraryManagementSystem.models
         public string Publisher { get; set; }
         public DateTime PublicationDate { get; set; }
         public string ISBN { get; set; }
+        public string tableName { get; set; }
     }
 }
