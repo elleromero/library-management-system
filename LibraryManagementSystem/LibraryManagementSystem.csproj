@@ -21,8 +21,4 @@
     </Resource>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="controllers\" />
-  </ItemGroup>
-
 </Project>
