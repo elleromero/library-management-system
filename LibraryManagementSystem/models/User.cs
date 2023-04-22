@@ -1,5 +1,4 @@
-﻿using LibraryManagementSystem.interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,24 +6,14 @@ using System.Threading.Tasks;
 
 namespace LibraryManagementSystem.models
 {
-    internal class User : IModel
+    internal class User
     {
-        // TODO: Only generate and retrieve keys from the query. Remove primary and foreign keys later
-        public User(string iD, string roleID, string memberID, string username, string password)
-        {
-            tableName = "users";
-            ID = iD;
-            RoleID = roleID;
-            MemberID = memberID;
-            Username = username;
-            Password = password;
-        }
+        public Guid ID { get; set; }
+        public string Username { get; set; } = string.Empty;
+        public string PasswordHash { get; set; } = string.Empty;
 
-        public string ID { get; set; }
-        public string RoleID { get; set; }
-        public string MemberID { get; set; }
-        public string Username { get; set; }
-        public string Password { get; set; }
-        public string tableName { get; set; }
+        // Foreign keys
+        public Role Role { get; set; } = new Role();
+        public Member Member { get; set; } = new Member();
     }
 }
