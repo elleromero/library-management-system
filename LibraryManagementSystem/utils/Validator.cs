@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -52,18 +53,36 @@ namespace LibraryManagementSystem.utils
 
         public static bool IsUsername(string username)
         {
-            if (string.IsNullOrWhiteSpace(username))
-                return false;
+            if (string.IsNullOrWhiteSpace(username)) return false;
 
             // Check if the username contains only letters, numbers, underscores, or hyphens
-            if (!Regex.IsMatch(username, @"^[a-zA-Z0-9_-]+$"))
-                return false;
+            if (!Regex.IsMatch(username, @"^[a-zA-Z0-9_-]+$")) return false;
 
             // Check if the username is not too long (50 characters or less)
-            if (username.Length > 50)
-                return false;
+            if (username.Length > 50) return false;
 
             return true;
+        }
+
+        public static bool IsUsernameUnique(string username)
+        {
+            // Check if username is unique
+            bool isUnique = false;
+            SqlClient.Execute((error, conn) =>
+            {
+                try
+                {
+                    string query = $"SELECT COUNT(*) FROM users WHERE username = '{username}'";
+                    SqlCommand command = new SqlCommand(query, conn);
+
+                    int count = (int)command.ExecuteScalar();
+
+                    isUnique = count == 0;
+                }
+                catch { isUnique = false; }
+            });
+
+            return isUnique;
         }
 
         public static bool IsPassword(string password)
