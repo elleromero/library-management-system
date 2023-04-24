@@ -16,7 +16,7 @@ namespace LibraryManagementSystem.services
             return signedInUser;
         }
 
-        public static void setSignedUser(User user)
+        public static void setSignedUser(User? user)
         {
             signedInUser = user;
         }

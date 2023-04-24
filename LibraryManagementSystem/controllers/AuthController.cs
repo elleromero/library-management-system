@@ -106,6 +106,13 @@ namespace LibraryManagementSystem.controllers
             return returnData;
         }
 
-        public void LogOut() { }
+        public static ControllerActionData LogOut() {
+            ControllerActionData returnData = new ControllerActionData();
+            
+            AuthService.setSignedUser(default(User));
+            returnData.IsSuccess = true;
+
+            return returnData;
+        }
     }
 }

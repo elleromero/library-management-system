@@ -29,5 +29,13 @@ namespace LMSTest
 
             Assert.IsTrue(res.IsSuccess);
         }
+
+        [TestMethod]
+        public void Should_Logout()
+        {
+            ControllerActionData res = AuthController.LogOut();
+            Assert.IsTrue(res.IsSuccess);
+
+        }
     }
 }
