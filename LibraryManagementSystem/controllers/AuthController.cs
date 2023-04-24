@@ -75,7 +75,10 @@ namespace LibraryManagementSystem.controllers
             return returnData;
         }
 
-        public void SignIn() { }
+        public void SignIn(string username, string password)
+        {
+            AuthDAO authDao = new AuthDAO();
+        }
 
         public void LogOut() { }
     }
