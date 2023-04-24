@@ -51,7 +51,7 @@ namespace LibraryManagementSystem.dao
             returnResult.Result = default(User);
             returnResult.IsSuccess = false;
 
-            string query = $"SELECT * FROM users u WHERE u.username = '{username}'";
+            string query = $"SELECT * FROM users u JOIN members m ON m.member_id = u.member_id JOIN roles r ON r.role_id = u.role_id WHERE u.username = '{username}'";
 
             SqlClient.Execute((error, conn) =>
             {

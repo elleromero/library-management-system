@@ -75,9 +75,32 @@ namespace LibraryManagementSystem.controllers
             return returnData;
         }
 
-        public void SignIn(string username, string password)
+        public static ControllerModifyData<User> SignIn(string username, string password)
         {
+            ControllerModifyData<User> returnData = new ControllerModifyData<User>();
+            returnData.Result = default(User);
+            Dictionary<string, string> errors = new Dictionary<string, string>();
+            bool isSuccess = false;
+
+            // get username
             AuthDAO authDao = new AuthDAO();
+            ReturnResult<User> result = authDao.GetByUsername(username);
+
+            // if username did not exist
+            if (result.Result != default(User))
+            {
+                // if password did not match
+                if (Argon2.Verify(result.Result.PasswordHash, password))
+                {
+                    returnData.Result = result.Result;
+                    isSuccess = true;
+                }
+                else errors.Add("password", "Incorrect password");
+            } else errors.Add("username", "Username did not exist");
+
+            returnData.Errors = errors;
+            returnData.IsSuccess = isSuccess;
+            return returnData;
         }
 
         public void LogOut() { }
