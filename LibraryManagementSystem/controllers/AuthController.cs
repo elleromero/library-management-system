@@ -2,6 +2,7 @@
 using LibraryManagementSystem.dao;
 using LibraryManagementSystem.interfaces;
 using LibraryManagementSystem.models;
+using LibraryManagementSystem.services;
 using LibraryManagementSystem.utils;
 using System;
 using System.Collections.Generic;
@@ -92,6 +93,8 @@ namespace LibraryManagementSystem.controllers
                 // if password did not match
                 if (Argon2.Verify(result.Result.PasswordHash, password))
                 {
+                    // both username and password matched
+                    AuthService.setSignedUser(result.Result);
                     returnData.Result = result.Result;
                     isSuccess = true;
                 }
