@@ -7,10 +7,10 @@ namespace LMSTest
     public class AuthControllerTest
     {
         [TestMethod]
-        public void Register()
+        public void Shoulld_Register()
         {
             ControllerModifyData<User> res = AuthController.Register(
-                "omineko",
+                "testomineko1",
                 "password",
                 "elle",
                 "romero",
@@ -20,6 +20,22 @@ namespace LMSTest
                 );
 
             Assert.IsTrue(res.IsSuccess);
+        }
+
+        [TestMethod]
+        public void Should_SignIn()
+        {
+            ControllerModifyData<User> res = AuthController.SignIn("testomineko11", "password1");
+
+            Assert.IsTrue(res.IsSuccess);
+        }
+
+        [TestMethod]
+        public void Should_Logout()
+        {
+            ControllerActionData res = AuthController.LogOut();
+            Assert.IsTrue(res.IsSuccess);
+
         }
     }
 }

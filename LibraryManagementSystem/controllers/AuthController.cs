@@ -2,6 +2,7 @@
 using LibraryManagementSystem.dao;
 using LibraryManagementSystem.interfaces;
 using LibraryManagementSystem.models;
+using LibraryManagementSystem.services;
 using LibraryManagementSystem.utils;
 using System;
 using System.Collections.Generic;
@@ -75,8 +76,43 @@ namespace LibraryManagementSystem.controllers
             return returnData;
         }
 
-        public void SignIn() { }
+        public static ControllerModifyData<User> SignIn(string username, string password)
+        {
+            ControllerModifyData<User> returnData = new ControllerModifyData<User>();
+            returnData.Result = default(User);
+            Dictionary<string, string> errors = new Dictionary<string, string>();
+            bool isSuccess = false;
 
-        public void LogOut() { }
+            // get username
+            AuthDAO authDao = new AuthDAO();
+            ReturnResult<User> result = authDao.GetByUsername(username);
+
+            // if username did not exist
+            if (result.Result != default(User))
+            {
+                // if password did not match
+                if (Argon2.Verify(result.Result.PasswordHash, password))
+                {
+                    // both username and password matched
+                    AuthService.setSignedUser(result.Result);
+                    returnData.Result = result.Result;
+                    isSuccess = true;
+                }
+                else errors.Add("password", "Incorrect password");
+            } else errors.Add("username", "Username did not exist");
+
+            returnData.Errors = errors;
+            returnData.IsSuccess = isSuccess;
+            return returnData;
+        }
+
+        public static ControllerActionData LogOut() {
+            ControllerActionData returnData = new ControllerActionData();
+            
+            AuthService.setSignedUser(default(User));
+            returnData.IsSuccess = true;
+
+            return returnData;
+        }
     }
 }

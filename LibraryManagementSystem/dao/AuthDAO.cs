@@ -35,33 +35,37 @@ namespace LibraryManagementSystem.dao
                         SqlCommand command = new SqlCommand(query, conn);
                         SqlDataReader reader = command.ExecuteReader();
 
-                        while (reader.Read())
-                        {
-                            returnResult.Result = new User
-                            {
-                                ID = reader.GetGuid(reader.GetOrdinal("user_id")),
-                                Username = reader.GetString(reader.GetOrdinal("username")),
-                                PasswordHash = reader.GetString(reader.GetOrdinal("password_hash")),
-                                Role = new Role
-                                {
-                                    ID = reader.GetInt32(reader.GetOrdinal("role_id")),
-                                    Name = reader.GetString(reader.GetOrdinal("name")),
-                                    HasAccess = reader.GetBoolean(reader.GetOrdinal("has_access"))
-                                },
-                                Member = new Member { 
-                                    ID = reader.GetGuid(reader.GetOrdinal("member_id")),
-                                    FirstName = reader.GetString(reader.GetOrdinal("first_name")),
-                                    LastName = reader.GetString(reader.GetOrdinal("last_name")),
-                                    Phone = reader.GetString(reader.GetOrdinal("phone")),
-                                    Email = reader.GetString(reader.GetOrdinal("email")),
-                                    Address = reader.GetString(reader.GetOrdinal("address")),
-                                }
-                            };
-                        }
-                        returnResult.IsSuccess = true;
-                        Console.WriteLine("SUCCESS");
+                        returnResult.Result = this.Fill(reader);
+                        returnResult.IsSuccess = returnResult.Result != default(User);
                     }
-                    catch (Exception e) { Console.WriteLine(e); return; }
+                    catch { return; }
+                }
+            });
+
+            return returnResult;
+        }
+
+        public ReturnResult<User> GetByUsername(string username)
+        {
+            ReturnResult<User> returnResult = new ReturnResult<User>();
+            returnResult.Result = default(User);
+            returnResult.IsSuccess = false;
+
+            string query = $"SELECT * FROM users u JOIN members m ON m.member_id = u.member_id JOIN roles r ON r.role_id = u.role_id WHERE u.username = '{username}'";
+
+            SqlClient.Execute((error, conn) =>
+            {
+                if (error == null)
+                {
+                    try
+                    {
+                        SqlCommand command = new SqlCommand(query, conn);
+                        SqlDataReader reader = command.ExecuteReader();
+
+                        returnResult.Result = this.Fill(reader);
+                        returnResult.IsSuccess = returnResult.Result != default(User);
+                    }
+                    catch { return; }
                 }
             });
 
@@ -86,6 +90,38 @@ namespace LibraryManagementSystem.dao
         public ReturnResult<User> Update(User model)
         {
             throw new NotImplementedException();
+        }
+
+        public User? Fill(SqlDataReader reader)
+        {
+            User? user = default(User);
+
+            while (reader.Read())
+            {
+                user = new User
+                {
+                    ID = reader.GetGuid(reader.GetOrdinal("user_id")),
+                    Username = reader.GetString(reader.GetOrdinal("username")),
+                    PasswordHash = reader.GetString(reader.GetOrdinal("password_hash")),
+                    Role = new Role
+                    {
+                        ID = reader.GetInt32(reader.GetOrdinal("role_id")),
+                        Name = reader.GetString(reader.GetOrdinal("name")),
+                        HasAccess = reader.GetBoolean(reader.GetOrdinal("has_access"))
+                    },
+                    Member = new Member
+                    {
+                        ID = reader.GetGuid(reader.GetOrdinal("member_id")),
+                        FirstName = reader.GetString(reader.GetOrdinal("first_name")),
+                        LastName = reader.GetString(reader.GetOrdinal("last_name")),
+                        Phone = reader.GetString(reader.GetOrdinal("phone")),
+                        Email = reader.GetString(reader.GetOrdinal("email")),
+                        Address = reader.GetString(reader.GetOrdinal("address")),
+                    }
+                };
+            }
+            
+            return user;
         }
     }
 }
