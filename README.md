@@ -4,3 +4,9 @@ With this system, librarians can manage their collections more efficiently and p
 **View ER Diagram [here](https://miro.com/app/board/uXjVMTqRfmM=/)**
 
 ## Features
+
+**Auth**
+- [ ] https://github.com/omineko/library-management-system/issues/17 GUI Implementation of Auth (SignIn, Register, LogOut) View
+- [x] SignIn
+- [x] Register
+- [x] LogOut
