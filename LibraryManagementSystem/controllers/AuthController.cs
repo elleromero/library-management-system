@@ -51,7 +51,8 @@ namespace LibraryManagementSystem.controllers
             if (errors.Count == 0)
             {
                 AuthDAO authDao = new AuthDAO();
-                ReturnResult<User> result = authDao.Create(new User {
+                ReturnResult<User> result = authDao.Create(new User
+                {
                     Username = username,
                     PasswordHash = Argon2.Hash(password), // This method consumes some time (2-10 secs.)
                     Member = new Member
@@ -63,12 +64,17 @@ namespace LibraryManagementSystem.controllers
                     },
                     Role = new Role
                     {
-                        ID = 1
+                        ID = 2
                     }
                 });
 
                 isSuccess = result.IsSuccess;
-                if (isSuccess) returnData.Result = result.Result;
+                if (isSuccess && result.Result != null)
+                {
+                    // clear password field
+                    result.Result.PasswordHash = "";
+                    returnData.Result = result.Result;
+                }
             }
 
             returnData.Errors = errors;
@@ -93,6 +99,9 @@ namespace LibraryManagementSystem.controllers
                 // if password did not match
                 if (Argon2.Verify(result.Result.PasswordHash, password))
                 {
+                    // clear password field
+                    result.Result.PasswordHash = "";
+
                     // both username and password matched
                     AuthService.setSignedUser(result.Result);
                     returnData.Result = result.Result;

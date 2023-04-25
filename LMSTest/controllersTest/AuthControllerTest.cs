@@ -10,7 +10,7 @@ namespace LMSTest
         public void Shoulld_Register()
         {
             ControllerModifyData<User> res = AuthController.Register(
-                "testomineko1",
+                "test_omineko1",
                 "password",
                 "elle",
                 "romero",
@@ -25,7 +25,7 @@ namespace LMSTest
         [TestMethod]
         public void Should_SignIn()
         {
-            ControllerModifyData<User> res = AuthController.SignIn("testomineko11", "password1");
+            ControllerModifyData<User> res = AuthController.SignIn("test_omineko1", "password");
 
             Assert.IsTrue(res.IsSuccess);
         }
