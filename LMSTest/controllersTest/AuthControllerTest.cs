@@ -25,7 +25,7 @@ namespace LMSTest
         [TestMethod]
         public void Should_SignIn()
         {
-            ControllerModifyData<User> res = AuthController.SignIn("test_omineko1", "password");
+            ControllerModifyData<User> res = AuthController.SignIn("admin", "password");
 
             Assert.IsTrue(res.IsSuccess);
         }
