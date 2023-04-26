@@ -55,5 +55,14 @@ namespace LMSTest
 
             Assert.IsTrue(isUpdated);
         }
+
+        [TestMethod]
+        public void Should_GetById()
+        {
+            ControllerModifyData<User> res = AdminController.GetUserById("993CC85-4EA2-4210-8468-7B81C7F0DE2F");
+
+            Console.WriteLine(res.Result?.Username);
+            Assert.IsTrue(res.IsSuccess);
+        }
     }
 }

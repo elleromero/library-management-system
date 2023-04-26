@@ -5,6 +5,7 @@ using LibraryManagementSystem.utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -146,6 +147,33 @@ namespace LibraryManagementSystem.controllers
                         Email = email
                     }
                 });
+
+                isSuccess = result.IsSuccess;
+                if (isSuccess && result.Result != null)
+                {
+                    returnData.Result = result.Result;
+                }
+            }
+
+            returnData.Errors = errors;
+            returnData.IsSuccess = isSuccess;
+            return returnData;
+        }
+
+        public static ControllerModifyData<User> GetUserById(string id)
+        {
+            ControllerModifyData<User> returnData = new ControllerModifyData<User>();
+            returnData.Result = default(User);
+            Dictionary<string, string> errors = new Dictionary<string, string>();
+            bool isSuccess = false;
+
+            // validate fields
+            if (string.IsNullOrWhiteSpace(id)) errors.Add("id", "ID is invalid");
+
+            if (errors.Count == 0)
+            {
+                AdminDAO adminDao = new AdminDAO();
+                ReturnResult<User> result = adminDao.GetById(id);
 
                 isSuccess = result.IsSuccess;
                 if (isSuccess && result.Result != null)

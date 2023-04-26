@@ -1,5 +1,6 @@
 ﻿using LibraryManagementSystem.interfaces;
 using LibraryManagementSystem.models;
+using LibraryManagementSystem.services;
 using LibraryManagementSystem.utils;
 using System;
 using System.Collections.Generic;
@@ -80,7 +81,22 @@ namespace LibraryManagementSystem.dao
 
         public bool Remove(string id)
         {
-            throw new NotImplementedException();
+            // check if the user is currently logged in
+            User? user = AuthService.getSignedUser();
+
+            if (user != null)
+            {
+                ReturnResult<User> result = this.GetById(user.ID.ToString());
+
+                if (result.IsSuccess && result.Result != null)
+                {
+                    // remove user
+                    
+
+                }
+            }
+
+            return false;
         }
 
         public ReturnResult<User> Update(User model)
