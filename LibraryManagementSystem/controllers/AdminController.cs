@@ -98,6 +98,7 @@ namespace LibraryManagementSystem.controllers
             string lastName,
             string address,
             string phone,
+            string adminPassword,
             string email = ""
             )
         {
@@ -107,7 +108,7 @@ namespace LibraryManagementSystem.controllers
             bool isSuccess = false;
 
             // is not admin
-            if (!AuthGuard.IsAdmin())
+            if (!AuthGuard.IsAdmin(true, adminPassword))
             {
                 errors.Add("permission", "Forbidden");
                 returnData.Errors = errors;
@@ -252,14 +253,14 @@ namespace LibraryManagementSystem.controllers
             return returnData;
         }
 
-        public static ControllerActionData RemoveById(string id)
+        public static ControllerActionData RemoveById(string id, string password)
         {
             ControllerActionData returnResult = new ControllerActionData();
             returnResult.Errors = new Dictionary<string, string>();
             returnResult.IsSuccess = false;
 
             // is not admin
-            if (!AuthGuard.IsAdmin())
+            if (!AuthGuard.IsAdmin(true, password))
             {
                 returnResult.Errors.Add("permission", "Forbidden");
 
