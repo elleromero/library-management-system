@@ -15,5 +15,6 @@ struct ControllerAccessData<T>
 }
 struct ControllerActionData
 {
+    public Dictionary<string, string> Errors;
     public bool IsSuccess;
 }

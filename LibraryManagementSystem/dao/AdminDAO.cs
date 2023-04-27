@@ -190,6 +190,12 @@ namespace LibraryManagementSystem.dao
                             returnResult.Result = this.Fill(reader);
                         }
                         returnResult.IsSuccess = returnResult.Result != default(User);
+
+                        // update info of current logged in user
+                        if (returnResult.IsSuccess && AuthGuard.IsLoggedIn(model.ID.ToString()))
+                        {
+                            AuthService.setSignedUser(returnResult.Result);
+                        }
                     }
                     catch { return; }
                 }

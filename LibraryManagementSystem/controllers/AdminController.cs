@@ -28,6 +28,16 @@ namespace LibraryManagementSystem.controllers
             Dictionary<string, string> errors = new Dictionary<string, string>();
             bool isSuccess = false;
 
+            // is not admin
+            if (!AuthGuard.IsAdmin())
+            {
+                errors.Add("permission", "Forbidden");
+                returnData.Errors = errors;
+                returnData.IsSuccess = false;
+
+                return returnData;
+            }
+
             // validate fields
             if (!Validator.IsName(firstName)) errors.Add("first_name", "Name is invalid");
             if (!Validator.IsName(lastName)) errors.Add("last_name", "Name is invalid");
@@ -95,6 +105,16 @@ namespace LibraryManagementSystem.controllers
             returnData.Result = default(User);
             Dictionary<string, string> errors = new Dictionary<string, string>();
             bool isSuccess = false;
+
+            // is not admin
+            if (!AuthGuard.IsAdmin())
+            {
+                errors.Add("permission", "Forbidden");
+                returnData.Errors = errors;
+                returnData.IsSuccess = false;
+
+                return returnData;
+            }
 
             // validate fields
             if (!Validator.IsName(firstName)) errors.Add("first_name", "Name is invalid");
@@ -167,6 +187,16 @@ namespace LibraryManagementSystem.controllers
             Dictionary<string, string> errors = new Dictionary<string, string>();
             bool isSuccess = false;
 
+            // is not admin
+            if (!AuthGuard.IsAdmin())
+            {
+                errors.Add("permission", "Forbidden");
+                returnData.Errors = errors;
+                returnData.IsSuccess = false;
+
+                return returnData;
+            }
+
             // validate fields
             if (string.IsNullOrWhiteSpace(id)) errors.Add("id", "ID is invalid");
 
@@ -194,7 +224,17 @@ namespace LibraryManagementSystem.controllers
             Dictionary<string, string> errors = new Dictionary<string, string>();
             bool isSuccess = false;
             returnData.rowCount = 1;
-            
+
+            // is not admin
+            if (!AuthGuard.IsAdmin())
+            {
+                errors.Add("permission", "Forbidden");
+                returnData.Errors = errors;
+                returnData.IsSuccess = false;
+
+                return returnData;
+            }
+
             if (page < 0) errors.Add("page", "Invalid page");
 
             if (errors.Count == 0)
@@ -215,8 +255,24 @@ namespace LibraryManagementSystem.controllers
         public static ControllerActionData RemoveById(string id)
         {
             ControllerActionData returnResult = new ControllerActionData();
-            AdminDAO adminDao = new AdminDAO();
-            returnResult.IsSuccess = adminDao.Remove(id);
+            returnResult.Errors = new Dictionary<string, string>();
+            returnResult.IsSuccess = false;
+
+            // is not admin
+            if (!AuthGuard.IsAdmin())
+            {
+                returnResult.Errors.Add("permission", "Forbidden");
+
+                return returnResult;
+            }
+
+            if (AuthGuard.IsLoggedIn(id)) returnResult.Errors.Add("auth", "Cannot remove logged in user"); 
+            
+            if (returnResult.Errors.Count == 0)
+            {
+                AdminDAO adminDao = new AdminDAO();
+                returnResult.IsSuccess = adminDao.Remove(id);
+            }
 
             return returnResult;
         }

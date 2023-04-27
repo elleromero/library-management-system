@@ -1,4 +1,5 @@
 ﻿using Isopoh.Cryptography.Argon2;
+using LibraryManagementSystem.models;
 using LibraryManagementSystem.services;
 using System;
 using System.Collections.Generic;
@@ -20,23 +21,43 @@ namespace LibraryManagementSystem.utils
             {
                 if (!string.IsNullOrWhiteSpace(userId) && error == null)
                 {
+                    Console.WriteLine("ACTIVATED");
                     string query = "SELECT * FROM users u JOIN roles r ON u.role_id = r.role_id " +
-                    $"WHERE r.has_access = 1 AND u.user_id = '${userId}'";
+                    $"WHERE r.has_access = 1 AND u.user_id = '{userId}'";
 
-                    query += isStrict ? $" AND password = {Argon2.Hash(password)};" : ";";
-
+                    Console.WriteLine(query);
                     try
                     {
                         SqlCommand command = new SqlCommand(query, conn);
-                        int count = (int)command.ExecuteScalar();
+                        SqlDataReader reader = command.ExecuteReader();
 
-                        isAllowed = count != 0;
+                        if (reader.Read())
+                        {
+                            if (isStrict)
+                            {
+                                string passwordHash = reader.GetString(reader.GetOrdinal("password_hash"));
+                                isAllowed = Argon2.Verify(passwordHash, password);
+                            }
+                            isAllowed = true;
+                        }
                     }
-                    catch { return; }
+                    catch (Exception e) { Console.WriteLine(e); return; }
                 }
             });
 
             return isAllowed;
+        }
+
+        public static bool IsLoggedIn(string id)
+        {
+            User? user = AuthService.getSignedUser();
+
+            if (user != null)
+            {
+                return user.ID.ToString() == id;
+            }
+
+            return false;
         }
     }
 }
