@@ -95,3 +95,30 @@ INSERT INTO genres (name, description) VALUES
 ('Teen Fiction', 'Stories exploring themes of growing up, identity, and social issues.'),
 ('Poetry', 'Works of verse that use language in unique and creative ways.'),
 ('Non-Fiction', 'Factual writing exploring a specific topic or theme.');
+
+/* DEFAULT ADMIN */
+
+DECLARE @member_id UNIQUEIDENTIFIER; SET @member_id = NEWID();
+
+INSERT INTO members (
+	first_name,
+	last_name,
+	email,
+	phone,
+	address,
+	member_id
+) VALUES (
+	'Lumpiang',
+	'Shanghai',
+	'howtomakelumpia@mail.net',
+	'+639100813695',
+	'127.0.0.1',
+	@member_id
+);
+
+INSERT INTO users (username, password_hash, role_id, member_id) VALUES (
+	'admin',
+	'$argon2id$v=19$m=65536,t=3,p=1$3wKJEyw8CQjpQHN2DjH7qg$uRD8wwKE4DTmjFVgunfEcH+zbdJOzi7n1/03Le70lRo',
+	1,
+	@member_id
+);

@@ -36,6 +36,7 @@ namespace LibraryManagementSystem.dao
                         SqlDataReader reader = command.ExecuteReader();
 
                         returnResult.Result = this.Fill(reader);
+                        reader.Close();
                         returnResult.IsSuccess = returnResult.Result != default(User);
                     }
                     catch { return; }
@@ -63,6 +64,7 @@ namespace LibraryManagementSystem.dao
                         SqlDataReader reader = command.ExecuteReader();
 
                         returnResult.Result = this.Fill(reader);
+                        reader.Close();
                         returnResult.IsSuccess = returnResult.Result != default(User);
                     }
                     catch { return; }
@@ -72,7 +74,7 @@ namespace LibraryManagementSystem.dao
             return returnResult;
         }
 
-        public ReturnResultArr<User> GetAll()
+        public ReturnResultArr<User> GetAll(int page)
         {
             throw new NotImplementedException();
         }

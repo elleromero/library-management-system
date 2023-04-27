@@ -8,10 +8,13 @@ struct ControllerModifyData<T>
 }
 struct ControllerAccessData<T>
 {
-    public T[] Results;
+    public Dictionary<string, string> Errors;
+    public List<T> Results;
+    public int rowCount;
     public bool IsSuccess;
 }
 struct ControllerActionData
 {
+    public Dictionary<string, string> Errors;
     public bool IsSuccess;
 }

@@ -1,5 +1,7 @@
 ﻿using LibraryManagementSystem.controllers;
 using LibraryManagementSystem.models;
+using LibraryManagementSystem.services;
+using LibraryManagementSystem.utils;
 
 namespace LMSTest
 {
@@ -10,7 +12,7 @@ namespace LMSTest
         public void Shoulld_Register()
         {
             ControllerModifyData<User> res = AuthController.Register(
-                "test_omineko1",
+                "test_omineko12",
                 "password",
                 "elle",
                 "romero",
@@ -25,8 +27,8 @@ namespace LMSTest
         [TestMethod]
         public void Should_SignIn()
         {
-            ControllerModifyData<User> res = AuthController.SignIn("test_omineko1", "password");
-
+            ControllerModifyData<User> res = AuthController.SignIn("admin", "password");
+            
             Assert.IsTrue(res.IsSuccess);
         }
 

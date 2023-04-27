@@ -60,7 +60,8 @@ namespace LibraryManagementSystem.controllers
                         FirstName = firstName,
                         LastName = lastName,
                         Address = address,
-                        Phone = phone
+                        Phone = phone,
+                        Email = email
                     },
                     Role = new Role
                     {
