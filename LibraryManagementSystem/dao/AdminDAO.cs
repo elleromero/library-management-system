@@ -40,6 +40,7 @@ namespace LibraryManagementSystem.dao
                         {
                             returnResult.Result = this.Fill(reader);
                         }
+                        reader.Close();
 
                         returnResult.IsSuccess = returnResult.Result != default(User);
                     }
@@ -85,6 +86,7 @@ namespace LibraryManagementSystem.dao
                             returnResult.rowCount = reader.GetInt32(reader.GetOrdinal("row_count"));
                         }
 
+                        reader.Close();
                         returnResult.IsSuccess = true;
                     }
                     catch { return; }
@@ -116,6 +118,7 @@ namespace LibraryManagementSystem.dao
                         {
                             returnResult.Result = this.Fill(reader);
                         }
+                        reader.Close();
                         returnResult.IsSuccess = returnResult.Result != default(User);
                     }
                     catch { return; }
@@ -189,6 +192,7 @@ namespace LibraryManagementSystem.dao
                         {
                             returnResult.Result = this.Fill(reader);
                         }
+                        reader.Close();
                         returnResult.IsSuccess = returnResult.Result != default(User);
 
                         // update info of current logged in user

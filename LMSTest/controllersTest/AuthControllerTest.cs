@@ -12,7 +12,7 @@ namespace LMSTest
         public void Shoulld_Register()
         {
             ControllerModifyData<User> res = AuthController.Register(
-                "test_omineko1",
+                "test_omineko12",
                 "password",
                 "elle",
                 "romero",
