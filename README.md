@@ -10,3 +10,10 @@ With this system, librarians can manage their collections more efficiently and p
 - [x] SignIn
 - [x] Register
 - [x] LogOut
+
+**Admin**
+- [x] Create Admin
+- [x] Update User
+- [x] Get User by Id
+- [x] Get All Users
+- [x] Remove by Id
