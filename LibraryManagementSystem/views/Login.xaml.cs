@@ -1,4 +1,6 @@
-﻿using System;
+﻿using LibraryManagementSystem.controllers;
+using LibraryManagementSystem.models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +24,47 @@ namespace LibraryManagementSystem.views
         public Login()
         {
             InitializeComponent();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+            string username = txtUsername.Text;
+            string password = txtPassword.Password;
+
+            ControllerModifyData<User> res = AuthController.SignIn(username, password);
+
+
+
+            if (res.IsSuccess)
+            {
+
+
+                MessageBox.Show("LOGIN SUCCESS!!!! WELCOME USER!!!");
+
+                // IF SUCCESS IT PROCEEDS TO MAINFORM
+                MainWindow mainform = new MainWindow();
+                mainform.Show();
+
+                if (mainform.IsVisible) { this.Hide(); }
+
+            }
+            else
+            {
+
+                MessageBox.Show("WRONG INPUT!!!");
+
+            }
+
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+
+            Register register = new Register();
+            register.Show();
+            this.Hide();
+
         }
     }
 }

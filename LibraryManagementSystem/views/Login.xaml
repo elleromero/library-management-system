@@ -5,8 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LibraryManagementSystem.views"
         mc:Ignorable="d"
-        Title="Login" Height="450" Width="800">
+        Title="Login" Height="450" Width="422">
     <Grid>
-        
+        <Image HorizontalAlignment="Center" Height="100" Margin="0,33,0,0" VerticalAlignment="Top" Width="100" Source="/views/585e4bd7cb11b227491c3397.png"/>
+        <Label Content="LOGIN" HorizontalAlignment="Center" Margin="0,133,0,0" VerticalAlignment="Top" FontSize="24" FontFamily="Bahnschrift" FontWeight="Bold"/>
+        <TextBox x:Name="txtUsername" HorizontalAlignment="Center" Margin="0,199,0,0" TextWrapping="Wrap" Text="USERNAME" VerticalAlignment="Top" Width="289" Height="51" TextAlignment="Center" FontSize="36" FontFamily="Calibri" FontWeight="Bold"/>
+        <PasswordBox x:Name="txtPassword" HorizontalAlignment="Center" Margin="0,270,0,0" VerticalAlignment="Top" Width="290" Height="50" Password="PASSWORD" FontFamily="Calibri" FontSize="36" FontWeight="Bold" HorizontalContentAlignment="Center"/>
+        <Button Content="SIGN IN" HorizontalAlignment="Left" Margin="232,340,0,0" VerticalAlignment="Top" Height="42" Width="124" Click="Button_Click" FontFamily="Calibri" FontWeight="Bold" FontSize="18"/>
+        <Button Content="REGISTER" HorizontalAlignment="Left" Margin="66,340,0,0" VerticalAlignment="Top" Height="42" Width="133" FontSize="18" FontFamily="Calibri" FontWeight="Bold" Click="Button_Click_1"/>
+
     </Grid>
 </Window>
