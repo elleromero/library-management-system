@@ -72,7 +72,7 @@ namespace LibraryManagementSystem.dao
             return returnResult;
         }
 
-        public ReturnResultArr<User> GetAll()
+        public ReturnResultArr<User> GetAll(int page)
         {
             throw new NotImplementedException();
         }

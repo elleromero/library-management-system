@@ -186,5 +186,40 @@ namespace LibraryManagementSystem.controllers
             returnData.IsSuccess = isSuccess;
             return returnData;
         }
+
+        public static ControllerAccessData<User> GetAllUsers(int page = 1)
+        {
+            ControllerAccessData<User> returnData = new ControllerAccessData<User>();
+            returnData.Results = new List<User>();
+            Dictionary<string, string> errors = new Dictionary<string, string>();
+            bool isSuccess = false;
+            returnData.rowCount = 1;
+            
+            if (page < 0) errors.Add("page", "Invalid page");
+
+            if (errors.Count == 0)
+            {
+                AdminDAO adminDao = new AdminDAO();
+                ReturnResultArr<User> result = adminDao.GetAll(page);
+
+                isSuccess = result.IsSuccess;
+                returnData.Results = result.Results;
+                returnData.rowCount = result.rowCount;
+            }
+
+            returnData.Errors = errors;
+            returnData.IsSuccess = isSuccess;
+            return returnData;
+        }
+
+        public static ControllerActionData RemoveById(string id)
+        {
+            ControllerActionData returnResult = new ControllerActionData();
+            AdminDAO adminDao = new AdminDAO();
+            returnResult.IsSuccess = adminDao.Remove(id);
+
+            return returnResult;
+        }
+
     }
 }

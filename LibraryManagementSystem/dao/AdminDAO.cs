@@ -36,7 +36,11 @@ namespace LibraryManagementSystem.dao
                         SqlCommand command = new SqlCommand(query, conn);
                         SqlDataReader reader = command.ExecuteReader();
 
-                        returnResult.Result = this.Fill(reader);
+                        if (reader.Read())
+                        {
+                            returnResult.Result = this.Fill(reader);
+                        }
+
                         returnResult.IsSuccess = returnResult.Result != default(User);
                     }
                     catch { return; }
@@ -46,9 +50,48 @@ namespace LibraryManagementSystem.dao
             return returnResult;
         }
 
-        public ReturnResultArr<User> GetAll()
+        public ReturnResultArr<User> GetAll(int page = 1)
         {
-            throw new NotImplementedException();
+            ReturnResultArr<User> returnResult = new ReturnResultArr<User>();
+            returnResult.Results = new List<User>();
+            returnResult.IsSuccess = false;
+            returnResult.rowCount = 0;
+
+            string query = "SELECT *, (SELECT COUNT(*) FROM users) as row_count FROM users u " +
+                "JOIN members m ON m.member_id = u.member_id " +
+                "JOIN roles r ON r.role_id = u.role_id " +
+                $"ORDER BY (SELECT NULL) OFFSET ({page} - 1) * 10 ROWS FETCH NEXT 10 ROWS ONLY;";
+
+            SqlClient.Execute((error, conn) =>
+            {
+                if (error == null)
+                {
+                    try
+                    {
+                        SqlCommand command = new SqlCommand(query, conn);
+                        SqlDataReader reader = command.ExecuteReader();
+
+                        // fill data
+                        while (reader.Read())
+                        {
+                            User? user = this.Fill(reader);
+
+                            if (user != null) returnResult.Results.Add(user);
+                        }
+
+                        // add row count
+                        if (reader.NextResult() && reader.Read())
+                        {
+                            returnResult.rowCount = reader.GetInt32(reader.GetOrdinal("row_count"));
+                        }
+
+                        returnResult.IsSuccess = true;
+                    }
+                    catch { return; }
+                }
+            });
+
+            return returnResult;
         }
 
         public ReturnResult<User> GetById(string id)
@@ -69,7 +112,10 @@ namespace LibraryManagementSystem.dao
                         SqlCommand command = new SqlCommand(query, conn);
                         SqlDataReader reader = command.ExecuteReader();
 
-                        returnResult.Result = this.Fill(reader);
+                        if (reader.Read())
+                        {
+                            returnResult.Result = this.Fill(reader);
+                        }
                         returnResult.IsSuccess = returnResult.Result != default(User);
                     }
                     catch { return; }
@@ -81,22 +127,31 @@ namespace LibraryManagementSystem.dao
 
         public bool Remove(string id)
         {
-            // check if the user is currently logged in
-            User? user = AuthService.getSignedUser();
+            bool isRemoved = false;
 
-            if (user != null)
+            // remove user
+            string declareQuery = "DECLARE @member_id UNIQUEIDENTIFIER;" +
+                $"SELECT @member_id = member_id FROM users WHERE user_id = '{id}';";
+            string userQuery = $"DELETE FROM users WHERE user_id = '{id}';";
+            string memberQuery = "DELETE FROM members WHERE member_id = @member_id;";
+            string query = $"{declareQuery} {userQuery} {memberQuery}";
+
+            SqlClient.Execute((error, conn) =>
             {
-                ReturnResult<User> result = this.GetById(user.ID.ToString());
-
-                if (result.IsSuccess && result.Result != null)
+                if (error == null)
                 {
-                    // remove user
-                    
+                    try
+                    {
+                        SqlCommand command = new SqlCommand(query, conn);
+                        command.ExecuteNonQuery();
 
+                        isRemoved = true;
+                    }
+                    catch { return; }
                 }
-            }
+            });
 
-            return false;
+            return isRemoved;
         }
 
         public ReturnResult<User> Update(User model)
@@ -130,9 +185,11 @@ namespace LibraryManagementSystem.dao
                         SqlCommand command = new SqlCommand(query, conn);
                         SqlDataReader reader = command.ExecuteReader();
 
-                        returnResult.Result = this.Fill(reader);
+                        if (reader.Read())
+                        {
+                            returnResult.Result = this.Fill(reader);
+                        }
                         returnResult.IsSuccess = returnResult.Result != default(User);
-                        Console.WriteLine(returnResult.IsSuccess);
                     }
                     catch { return; }
                 }
@@ -144,30 +201,26 @@ namespace LibraryManagementSystem.dao
         public User? Fill(SqlDataReader reader)
         {
             User? user = default(User);
-
-            while (reader.Read())
+            user = new User
             {
-                user = new User
+                ID = reader.GetGuid(reader.GetOrdinal("user_id")),
+                Username = reader.GetString(reader.GetOrdinal("username")),
+                Role = new Role
                 {
-                    ID = reader.GetGuid(reader.GetOrdinal("user_id")),
-                    Username = reader.GetString(reader.GetOrdinal("username")),
-                    Role = new Role
-                    {
-                        ID = reader.GetInt32(reader.GetOrdinal("role_id")),
-                        Name = reader.GetString(reader.GetOrdinal("name")),
-                        HasAccess = reader.GetBoolean(reader.GetOrdinal("has_access"))
-                    },
-                    Member = new Member
-                    {
-                        ID = reader.GetGuid(reader.GetOrdinal("member_id")),
-                        FirstName = reader.GetString(reader.GetOrdinal("first_name")),
-                        LastName = reader.GetString(reader.GetOrdinal("last_name")),
-                        Phone = reader.GetString(reader.GetOrdinal("phone")),
-                        Email = reader.GetString(reader.GetOrdinal("email")),
-                        Address = reader.GetString(reader.GetOrdinal("address")),
-                    }
-                };
-            }
+                    ID = reader.GetInt32(reader.GetOrdinal("role_id")),
+                    Name = reader.GetString(reader.GetOrdinal("name")),
+                    HasAccess = reader.GetBoolean(reader.GetOrdinal("has_access"))
+                },
+                Member = new Member
+                {
+                    ID = reader.GetGuid(reader.GetOrdinal("member_id")),
+                    FirstName = reader.GetString(reader.GetOrdinal("first_name")),
+                    LastName = reader.GetString(reader.GetOrdinal("last_name")),
+                    Phone = reader.GetString(reader.GetOrdinal("phone")),
+                    Email = reader.GetString(reader.GetOrdinal("email")),
+                    Address = reader.GetString(reader.GetOrdinal("address")),
+                }
+            };
 
             return user;
         }

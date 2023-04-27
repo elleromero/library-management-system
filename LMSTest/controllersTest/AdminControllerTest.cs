@@ -11,7 +11,7 @@ namespace LMSTest
         public void Should_Create_Admin()
         {
             ControllerModifyData<User> admin = AdminController.CreateAdmin(
-                "admin23",
+                "admin_omineko132",
                 "password",
                 "admin",
                 "romero",
@@ -23,7 +23,7 @@ namespace LMSTest
         }
 
         [TestMethod]
-        public void Should_Update_Admin()
+        public void Should_Update_User()
         {
             bool isUpdated = false;
 
@@ -62,6 +62,22 @@ namespace LMSTest
             ControllerModifyData<User> res = AdminController.GetUserById("993CC885-4EA2-4210-8468-7B81C7F0DE2F");
 
             Assert.IsTrue(res.IsSuccess);
+        }
+
+        [TestMethod]
+        public void Should_GetAllUsers()
+        {
+            ControllerAccessData<User> res = AdminController.GetAllUsers();
+
+            Assert.IsTrue(res.IsSuccess);
+        }
+
+        [TestMethod]
+        public void Should_RemoveById()
+        {
+            ControllerActionData res = AdminController.RemoveById("4749519F-3818-424A-B9CE-30BF0B31DAF5");
+
+            Console.WriteLine(res.IsSuccess);
         }
     }
 }
