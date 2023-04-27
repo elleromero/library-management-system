@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:LibraryManagementSystem"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
+    <Grid Margin="0,0,64,0">
 
     </Grid>
 </Window>

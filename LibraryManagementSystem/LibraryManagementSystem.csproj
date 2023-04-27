@@ -9,6 +9,9 @@
 
   <ItemGroup>
     <None Remove="resources\queries\setupSQL.sql" />
+    <None Remove="views\5856.jpg" />
+    <None Remove="views\585e4bd7cb11b227491c3397.png" />
+    <None Remove="views\—Pngtree—register_1169707.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,6 +23,9 @@
     <Resource Include="resources\queries\setupSQL.sql">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="views\5856.jpg" />
+    <Resource Include="views\585e4bd7cb11b227491c3397.png" />
+    <Resource Include="views\—Pngtree—register_1169707.png" />
   </ItemGroup>
 
 </Project>

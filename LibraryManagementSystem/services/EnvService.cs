@@ -12,7 +12,7 @@ namespace LibraryManagementSystem.services
         // You can customize the values of each variable as much as you like.
         private const string
             DB_NAME = "DB_LMS",
-            CONN_BASE = "Data Source = DESKTOP-PDLDGGJ\\SQLEXPRESS;Integrated Security=true;",
+            CONN_BASE = "Data Source = DESKTOP-65FQSMS\\SQLEXPRESS;Integrated Security=true;",
             CONN_STR = $"{CONN_BASE}Initial Catalog={DB_NAME}";
                            
         public static string GetDBName()

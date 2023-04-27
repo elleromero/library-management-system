@@ -1,4 +1,5 @@
 ﻿using LibraryManagementSystem.services;
+using LibraryManagementSystem.views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +27,11 @@ namespace LibraryManagementSystem
             InitializeComponent();
 
             SetupService.Ready();
+
+            Login login = new Login();
+            login.Show();
+            this.Hide();
+
         }
     }
 }
