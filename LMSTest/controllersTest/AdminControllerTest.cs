@@ -75,7 +75,7 @@ namespace LMSTest
         [TestMethod]
         public void Should_RemoveById()
         {
-            ControllerActionData res = AdminController.RemoveById("4749519F-3818-424A-B9CE-30BF0B31DAF5");
+            ControllerActionData res = AdminController.RemoveById("4749519F-3818-424A-B9CE-30BF0B31DAF5", "admin");
 
             Console.WriteLine(res.IsSuccess);
         }
