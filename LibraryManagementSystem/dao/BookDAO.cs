@@ -2,6 +2,7 @@
 using LibraryManagementSystem.models;
 using LibraryManagementSystem.utils;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
@@ -82,7 +83,33 @@ namespace LibraryManagementSystem.dao
 
         public ReturnResult<Book> GetById(string id)
         {
-            throw new NotImplementedException();
+            ReturnResult<Book> returnResult = new ReturnResult<Book>();
+            returnResult.Result = default(Book);
+            returnResult.IsSuccess = false;
+
+            SqlClient.Execute((error, conn) =>
+            {
+                if (error == null)
+                {
+                    string query = $"SELECT * FROM books b JOIN genres g ON g.genre_id = b.genre_id WHERE b.book_id = '{id}';";
+
+                    try
+                    {
+                        SqlCommand command = new SqlCommand(query, conn);
+                        SqlDataReader reader = command.ExecuteReader();
+
+                        if (reader.Read())
+                        {
+                            returnResult.Result = this.Fill(reader);
+                        }
+                        reader.Close();
+                        returnResult.IsSuccess = returnResult.Result != default(Book);
+                    }
+                    catch { return; }
+                }
+            });
+
+            return returnResult;
         }
 
         public bool Remove(string id)
@@ -92,6 +119,19 @@ namespace LibraryManagementSystem.dao
 
         public ReturnResult<Book> Update(Book model)
         {
+            ReturnResult<User> returnResult = new ReturnResult<User>();
+            returnResult.Result = default(User);
+            returnResult.IsSuccess = false;
+
+            string updateQuery = "UPDATE books SET " +
+                $"genre_id = {model.Genre.ID}, " +
+                $"title = '{model.Title}', " +
+                $"sypnosis = '{model.Sypnosis}', " +
+                $"cover = '{model.Cover}', " +
+                $"author = '{model.Author}', " +
+                $"publication_date = '{model.PublicationDate.ToString("yyyy-MM-dd HH:mm:ss.fff")}', " +
+                $"publisher = '{model.Publisher}', " +
+                $"isbn = '{model.ISBN}' WHERE book_id = '{model.ID}';";
             throw new NotImplementedException();
         }
     }

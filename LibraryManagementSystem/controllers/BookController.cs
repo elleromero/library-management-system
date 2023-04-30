@@ -71,5 +71,64 @@ namespace LibraryManagementSystem.controllers
             returnData.IsSuccess = isSuccess;
             return returnData;
         }
+
+        public static ControllerModifyData<Book> UpdateBook(
+            string bookId,
+            int genreId,
+            string title,
+            string author,
+            string publisher,
+            DateTime publicationDate,
+            string isbn,
+            string coverPath = "",
+            string sypnosis = "No sypnosis available"
+            )
+        {
+            ControllerModifyData<Book> returnData = new ControllerModifyData<Book>();
+            Dictionary<string, string> errors = new Dictionary<string, string>();
+            bool isSuccess = false;
+
+            // validate
+            return returnData;
+        }
+
+        public static ControllerModifyData<Book> GetBookById(string id)
+        {
+            ControllerModifyData<Book> returnData = new ControllerModifyData<Book>();
+            returnData.Result = default(Book);
+            Dictionary<string, string> errors = new Dictionary<string, string>();
+            bool isSuccess = false;
+
+            // is not admin
+            if (!AuthGuard.IsAdmin())
+            {
+                errors.Add("permission", "Forbidden");
+                returnData.Errors = errors;
+                returnData.IsSuccess = false;
+
+                return returnData;
+            }
+
+            // validate fields
+            if (string.IsNullOrWhiteSpace(id)) errors.Add("id", "ID is invalid");
+
+            if (errors.Count == 0)
+            {
+                BookDAO bookDao = new BookDAO();
+                ReturnResult<Book> result = bookDao.GetById(id);
+
+                isSuccess = result.IsSuccess;
+                if (isSuccess && result.Result != null)
+                {
+                    returnData.Result = result.Result;
+                }
+            }
+
+            returnData.Errors = errors;
+            returnData.IsSuccess = isSuccess;
+            return returnData;
+
+
+        }
     }
 }
