@@ -30,5 +30,23 @@ namespace LMSTest
 
             Assert.IsTrue(res.IsSuccess);
         }
+
+        [TestMethod]
+        public void Should_Update_Book()
+        {
+            AuthController.SignIn("admin", "password");
+            ControllerModifyData<Book> res = BookController.UpdateBook(
+                "47298E60-74EA-4F20-AAF2-55FAC9797492",
+                1,
+                "HTML Semantic",
+                "Kevin Bacon",
+                "freecodecamp",
+                new DateTime(2003, 1, 23),
+                "978-3-16-148410-0"
+                );
+
+            Console.WriteLine(res.IsSuccess);
+            Console.WriteLine(res.Result?.Author);
+        }
     }
 }

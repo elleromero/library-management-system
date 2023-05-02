@@ -88,7 +88,67 @@ namespace LibraryManagementSystem.controllers
             Dictionary<string, string> errors = new Dictionary<string, string>();
             bool isSuccess = false;
 
-            // validate
+            // is not admin
+            if (!AuthGuard.IsAdmin())
+            {
+                errors.Add("permission", "Forbidden");
+                returnData.Errors = errors;
+                returnData.IsSuccess = false;
+
+                return returnData;
+            }
+
+            // validation
+            if (!Validator.IsGenreIdValid(genreId)) errors.Add("genreId", "ID is invalid");
+            if (string.IsNullOrWhiteSpace(title)) errors.Add("title", "Title is required");
+            if (string.IsNullOrWhiteSpace(author)) errors.Add("author", "Author is required");
+            if (string.IsNullOrWhiteSpace(publisher)) errors.Add("publisher", "Publisher is required");
+            if (!Validator.IsDateBeforeOrOnPresent(publicationDate)) errors.Add("publicationDate", "Datetime must be before or on the present date");
+            if (!Validator.IsValidISBN(isbn)) errors.Add("isbn", "Invalid ISBN. Make sure the ISBN is in ISBN-10 or ISBN-13 format");
+
+            // update if theres no error
+            if (errors.Count == 0)
+            {
+                BookDAO bookDao = new BookDAO();
+
+                // check if book exists
+                ReturnResult<Book> book = bookDao.GetById(bookId);
+
+                if (!book.IsSuccess)
+                {
+                    errors.Add("bookId", "Book not found");
+                    returnData.Errors = errors;
+                    returnData.IsSuccess = isSuccess;
+                    return returnData;
+                }
+
+                // proceed if book is found
+                ReturnResult<Book> result = bookDao.Update(new Book
+                {
+                    ID = new Guid(bookId),
+                    Title = title,
+                    Sypnosis = sypnosis,
+                    Author = author,
+                    Cover = coverPath,
+                    Publisher = publisher,
+                    PublicationDate = publicationDate,
+                    ISBN = isbn,
+                    Genre = new Genre
+                    {
+                        ID = genreId
+                    }
+                });
+
+                Console.WriteLine("RESULT: " + result.IsSuccess);
+                isSuccess = result.IsSuccess;
+                if (isSuccess && result.Result != null)
+                {
+                    returnData.Result = result.Result;
+                }
+            }
+
+            returnData.Errors = errors;
+            returnData.IsSuccess = isSuccess;
             return returnData;
         }
 

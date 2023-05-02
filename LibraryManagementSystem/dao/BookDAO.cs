@@ -1,5 +1,6 @@
 ﻿using LibraryManagementSystem.interfaces;
 using LibraryManagementSystem.models;
+using LibraryManagementSystem.services;
 using LibraryManagementSystem.utils;
 using System;
 using System.Collections;
@@ -119,11 +120,11 @@ namespace LibraryManagementSystem.dao
 
         public ReturnResult<Book> Update(Book model)
         {
-            ReturnResult<User> returnResult = new ReturnResult<User>();
-            returnResult.Result = default(User);
+            ReturnResult<Book> returnResult = new ReturnResult<Book>();
+            returnResult.Result = default(Book);
             returnResult.IsSuccess = false;
 
-            string updateQuery = "UPDATE books SET " +
+            string query = "UPDATE books SET " +
                 $"genre_id = {model.Genre.ID}, " +
                 $"title = '{model.Title}', " +
                 $"sypnosis = '{model.Sypnosis}', " +
@@ -131,8 +132,30 @@ namespace LibraryManagementSystem.dao
                 $"author = '{model.Author}', " +
                 $"publication_date = '{model.PublicationDate.ToString("yyyy-MM-dd HH:mm:ss.fff")}', " +
                 $"publisher = '{model.Publisher}', " +
-                $"isbn = '{model.ISBN}' WHERE book_id = '{model.ID}';";
-            throw new NotImplementedException();
+                $"isbn = '{model.ISBN}' WHERE book_id = '{model.ID}'; " +
+                $"SELECT * FROM books b JOIN genres g ON g.genre_id = b.genre_id WHERE b.book_id = '{model.ID}';";
+
+            SqlClient.Execute((error, conn) =>
+            {
+                if (error == null)
+                {
+                    try
+                    {
+                        SqlCommand command = new SqlCommand(query, conn);
+                        SqlDataReader reader = command.ExecuteReader();
+
+                        if (reader.Read())
+                        {
+                            returnResult.Result = this.Fill(reader);
+                        }
+                        reader.Close();
+                        returnResult.IsSuccess = returnResult.Result != default(Book);
+                    }
+                    catch { return; }
+                }
+            });
+
+            return returnResult;
         }
     }
 }
